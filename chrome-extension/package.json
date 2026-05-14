@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Mapa Nehnuteľností — manifest, background service worker a build pre Chrome rozšírenie.",
   "type": "module",
   "private": true,
