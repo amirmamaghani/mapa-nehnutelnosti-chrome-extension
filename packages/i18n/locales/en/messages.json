@@ -166,5 +166,57 @@
   "indexingOff": {
     "description": "Short label on the header button when indexing is paused",
     "message": "PAUSED"
+  },
+  "aiEnable": {
+    "description": "Label of the master checkbox that enables AI search",
+    "message": "Enable AI search"
+  },
+  "aiEnableHint": {
+    "description": "Helper text under the AI search toggle",
+    "message": "Adds a natural-language search bar to the overlay header."
+  },
+  "aiProvider": {
+    "description": "Label for the provider dropdown",
+    "message": "Provider"
+  },
+  "aiApiKey": {
+    "description": "Label for the API key input",
+    "message": "API key"
+  },
+  "aiBaseUrlOptional": {
+    "description": "Label for the optional provider base URL input",
+    "message": "Base URL (optional)"
+  },
+  "aiLocalUrl": {
+    "description": "Label for the local LLM server URL input (LM Studio, Ollama, ...)",
+    "message": "Local server URL"
+  },
+  "aiModel": {
+    "description": "Label for the model name input",
+    "message": "Model"
+  },
+  "aiPrivacyWarning": {
+    "description": "Warning that queries are sent to an external provider",
+    "message": "Queries and listing metadata are sent directly from your browser to the selected provider. Your API key stays local."
+  },
+  "aiSearchPlaceholder": {
+    "description": "Placeholder in the AI search bar",
+    "message": "e.g. \"flats in Petržalka under 200k\""
+  },
+  "aiSearchNeedsKey": {
+    "description": "Placeholder when API key is missing",
+    "message": "Add an API key in Settings first"
+  },
+  "aiSystemPrompt": {
+    "description": "Label for the collapsible section with the custom system prompt",
+    "message": "Custom system prompt (advanced)"
+  },
+  "aiSystemPromptHint": {
+    "description": "Helper text under the system prompt textarea",
+    "message": "Empty = use the bundled default. Your prompt fully replaces the default — tool schemas are preserved."
+  },
+  "aiSystemPromptReset": {
+    "description": "Button that clears the custom prompt and falls back to the default",
+    "message": "Reset to default"
   }
 }

@@ -9,6 +9,8 @@ type Props = {
   favorites: Set<string>;
   selectedId: string | null;
   markerLabel: MarkerLabel;
+  /** When non-null, markers not in this set render dimmed. */
+  dimmedIds?: Set<string> | null;
   onSelect: (id: string) => void;
 };
 
@@ -69,7 +71,7 @@ const getIcon = (listing: Listing, label: MarkerLabel, isFav: boolean): DivIcon 
   return icon;
 };
 
-export const MapView = ({ listings, favorites, selectedId, markerLabel, onSelect }: Props) => {
+export const MapView = ({ listings, favorites, selectedId, markerLabel, dimmedIds, onSelect }: Props) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markersRef = useRef<Map<string, Marker>>(new Map());
@@ -117,6 +119,7 @@ export const MapView = ({ listings, favorites, selectedId, markerLabel, onSelect
       present.add(listing.id);
       const existing = markersRef.current.get(listing.id);
       const icon = getIcon(listing, markerLabel, favorites.has(listing.id));
+      const isDimmed = dimmedIds != null && !dimmedIds.has(listing.id);
       if (existing) {
         existing.setLatLng([listing.coord.lat, listing.coord.lng]);
         existing.setIcon(icon);
@@ -125,6 +128,8 @@ export const MapView = ({ listings, favorites, selectedId, markerLabel, onSelect
         m.on('click', () => onSelect(listing.id));
         markersRef.current.set(listing.id, m);
       }
+      const el = markersRef.current.get(listing.id)?.getElement();
+      if (el) el.style.opacity = isDimmed ? '0.2' : '1';
     }
     for (const [id, m] of markersRef.current) {
       if (!present.has(id)) {
@@ -138,7 +143,7 @@ export const MapView = ({ listings, favorites, selectedId, markerLabel, onSelect
       leafletMap.fitBounds(bounds, { padding: [24, 24], maxZoom: 14 });
       hasFitted.current = true;
     }
-  }, [geocoded, favorites, markerLabel, onSelect]);
+  }, [geocoded, favorites, markerLabel, dimmedIds, onSelect]);
 
   useEffect(() => {
     const leafletMap = mapRef.current;

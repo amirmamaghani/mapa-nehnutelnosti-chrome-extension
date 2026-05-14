@@ -166,5 +166,57 @@
   "indexingOff": {
     "description": "Krátky štítok na tlačidle v hlavičke, keď je indexovanie pozastavené",
     "message": "PAUZA"
+  },
+  "aiEnable": {
+    "description": "Štítok hlavného checkboxu, ktorý zapne AI vyhľadávanie",
+    "message": "Povoliť AI vyhľadávanie"
+  },
+  "aiEnableHint": {
+    "description": "Vysvetľujúca poznámka pod toggle AI vyhľadávania",
+    "message": "Pridá vyhľadávacie pole do hlavičky, kde môžeš písať dotazy v prirodzenom jazyku."
+  },
+  "aiProvider": {
+    "description": "Štítok dropdownu na výber LLM providera",
+    "message": "Provider"
+  },
+  "aiApiKey": {
+    "description": "Štítok inputu pre API key",
+    "message": "API kľúč"
+  },
+  "aiBaseUrlOptional": {
+    "description": "Štítok inputu pre voliteľný base URL providera",
+    "message": "Base URL (voliteľné)"
+  },
+  "aiLocalUrl": {
+    "description": "Štítok inputu pre URL lokálneho LLM servera (LM Studio, Ollama, ...)",
+    "message": "URL lokálneho servera"
+  },
+  "aiModel": {
+    "description": "Štítok inputu pre názov modelu",
+    "message": "Model"
+  },
+  "aiPrivacyWarning": {
+    "description": "Upozornenie o tom, že dotazy idú na externého providera",
+    "message": "Dotazy a metadata inzerátov budú odoslané priamo z tvojho prehliadača na vybraného providera. API kľúč zostane lokálne."
+  },
+  "aiSearchPlaceholder": {
+    "description": "Placeholder v search bare pre AI dotaz",
+    "message": "napr. „byty v Petržalke pod 200k\""
+  },
+  "aiSearchNeedsKey": {
+    "description": "Placeholder keď chýba API kľúč",
+    "message": "Najprv pridaj API kľúč v Nastaveniach"
+  },
+  "aiSystemPrompt": {
+    "description": "Štítok rozbaľovacej sekcie pre custom system prompt",
+    "message": "Vlastný systémový prompt (pokročilé)"
+  },
+  "aiSystemPromptHint": {
+    "description": "Vysvetľujúca poznámka pod textareou pre system prompt",
+    "message": "Prázdne = použije sa defaultný prompt. Tvoj prompt nahradí celý default — schémy nástrojov ostanú zachované."
+  },
+  "aiSystemPromptReset": {
+    "description": "Tlačidlo na vymazanie vlastného promptu a návrat na default",
+    "message": "Reset na default"
   }
 }

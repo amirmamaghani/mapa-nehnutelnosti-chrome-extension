@@ -1,3 +1,4 @@
+import { AISearch } from './AISearch';
 import { Filters } from './Filters';
 import { MapView } from './Map';
 import { Preview } from './Preview';
@@ -18,6 +19,8 @@ export default function App() {
   const { listings, favorites, failedIds, selectedId, lists, activeListId } = useOverlayState();
   const [filters, setFilters] = useState<FilterState>({ priceMax: null, areaMin: null, areaMax: null });
   const [view, setView] = useState<'map' | 'settings'>('map');
+  const [aiHighlightIds, setAiHighlightIds] = useState<Set<string> | null>(null);
+  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
 
   useEffect(() => {
     void hydrateFromBackground();
@@ -163,6 +166,21 @@ export default function App() {
           </button>
         </div>
       </header>
+      {view === 'map' && (
+        <AISearch
+          listings={filtered}
+          favorites={favorites}
+          onResult={(ids, explanation) => {
+            setAiHighlightIds(ids);
+            setAiExplanation(explanation);
+          }}
+        />
+      )}
+      {view === 'map' && aiExplanation && (
+        <div className="border-b border-blue-200 bg-blue-50 px-3 py-1 text-[10px] text-blue-700">
+          {aiHighlightIds ? `${aiHighlightIds.size} ✓ · ${aiExplanation}` : aiExplanation}
+        </div>
+      )}
       <div className="relative flex-1">
         {view === 'settings' ? (
           <Settings onClose={() => setView('map')} />
@@ -173,6 +191,7 @@ export default function App() {
               favorites={favorites}
               selectedId={selectedId}
               markerLabel={overlayPref.markerLabel}
+              dimmedIds={aiHighlightIds}
               onSelect={select}
             />
             {selected && (

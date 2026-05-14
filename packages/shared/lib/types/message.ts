@@ -22,7 +22,15 @@ export type RuntimeMessage =
   | { type: 'EXPORT_LIST_CSV'; id: string }
   | { type: 'EXPORT_LIST_CSV_RESPONSE'; csv: string; name: string }
   | { type: 'IMPORT_LIST_CSV'; name: string; csv: string }
-  | { type: 'IMPORT_LIST_CSV_RESPONSE'; list: ListingList; imported: number; skipped: number };
+  | { type: 'IMPORT_LIST_CSV_RESPONSE'; list: ListingList; imported: number; skipped: number }
+  | {
+      type: 'LLM_FETCH';
+      url: string;
+      method: 'POST';
+      headers: Record<string, string>;
+      body: string;
+    }
+  | { type: 'LLM_FETCH_RESPONSE'; ok: boolean; status: number; body: string };
 
 export type PageMessage = { type: 'HIGHLIGHT_LISTING'; site: string; siteListingId: string };
 

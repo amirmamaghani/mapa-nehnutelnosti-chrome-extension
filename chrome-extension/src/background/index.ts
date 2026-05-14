@@ -425,6 +425,23 @@ chrome.runtime.onMessage.addListener((message: RuntimeMessage, sender, sendRespo
     );
     return true;
   }
+  if (message.type === 'LLM_FETCH') {
+    void (async () => {
+      try {
+        const res = await fetch(message.url, { method: message.method, headers: message.headers, body: message.body });
+        const body = await res.text();
+        sendResponse({ type: 'LLM_FETCH_RESPONSE', ok: res.ok, status: res.status, body });
+      } catch (err) {
+        sendResponse({
+          type: 'LLM_FETCH_RESPONSE',
+          ok: false,
+          status: 0,
+          body: (err as Error).message ?? 'fetch failed',
+        });
+      }
+    })();
+    return true;
+  }
 
   if (typeof tabId !== 'number') return false;
 

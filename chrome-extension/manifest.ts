@@ -13,6 +13,11 @@ const manifest = {
     'https://*.nehnutelnosti.sk/*',
     'https://nominatim.openstreetmap.org/*',
     'https://tile.openstreetmap.org/*',
+    'https://api.openai.com/*',
+    'https://api.anthropic.com/*',
+    'https://openrouter.ai/*',
+    'http://localhost/*',
+    'http://127.0.0.1/*',
   ],
   permissions: ['storage'],
   background: {
