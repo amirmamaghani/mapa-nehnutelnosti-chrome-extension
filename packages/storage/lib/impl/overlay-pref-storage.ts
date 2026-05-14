@@ -1,18 +1,20 @@
 import { createStorage, StorageEnum } from '../base/index.js';
 import type { BaseStorageType } from '../base/index.js';
 
-export type OverlayMode = 'collapsed' | 'normal' | 'maximized';
-
 export type MarkerLabel = 'none' | 'price' | 'title' | 'area';
 
 export type OverlayPrefStateType = {
-  mode: OverlayMode;
+  minimized: boolean;
+  expandH: boolean;
+  expandV: boolean;
   markerLabel: MarkerLabel;
+  /** Empty until the background has created at least one list. */
+  activeListId: string;
 };
 
 export const overlayPrefStorage: BaseStorageType<OverlayPrefStateType> = createStorage<OverlayPrefStateType>(
   'overlay-pref',
-  { mode: 'normal', markerLabel: 'none' },
+  { minimized: false, expandH: false, expandV: false, markerLabel: 'none', activeListId: '' },
   {
     storageEnum: StorageEnum.Local,
     liveUpdate: true,

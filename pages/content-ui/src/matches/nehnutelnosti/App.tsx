@@ -2,7 +2,7 @@ import { Filters } from './Filters';
 import { MapView } from './Map';
 import { Preview } from './Preview';
 import { Settings } from './Settings';
-import { hydrateFromBackground, select, toggleFavorite, useOverlayState } from './store';
+import { createList, hydrateFromBackground, select, setActiveList, toggleFavorite, useOverlayState } from './store';
 import { t } from '@extension/i18n';
 import { useStorage } from '@extension/shared';
 import { overlayPrefStorage } from '@extension/storage';
@@ -15,7 +15,7 @@ const LABEL_GLYPH: Record<MarkerLabel, string> = { none: '·', price: '€', tit
 
 export default function App() {
   const overlayPref = useStorage(overlayPrefStorage);
-  const { listings, favorites, failedIds, selectedId } = useOverlayState();
+  const { listings, favorites, failedIds, selectedId, lists, activeListId } = useOverlayState();
   const [filters, setFilters] = useState<FilterState>({ priceMax: null, areaMin: null, areaMax: null });
   const [view, setView] = useState<'map' | 'settings'>('map');
 
@@ -42,26 +42,50 @@ export default function App() {
   const progressPct = geocodableCount === 0 ? 0 : Math.round(((geocodedCount + failedCount) / geocodableCount) * 100);
   const selected = selectedId ? (listings.find(l => l.id === selectedId) ?? null) : null;
 
-  if (overlayPref.mode === 'collapsed') {
+  if (overlayPref.minimized) {
     return (
       <button
         className="fixed bottom-4 right-4 z-[2147483647] flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white shadow-lg hover:bg-blue-700"
-        onClick={() => overlayPrefStorage.set({ ...overlayPref, mode: 'normal' })}
+        onClick={() => overlayPrefStorage.set({ ...overlayPref, minimized: false })}
         title={t('expand')}>
         {geocodedCount}
       </button>
     );
   }
 
-  const isMaximized = overlayPref.mode === 'maximized';
-  const containerSize = isMaximized ? 'left-4 right-4 h-[50vh]' : 'right-4 h-[360px] w-[480px]';
+  const horizontalClass = overlayPref.expandH ? 'left-4 right-4' : 'right-4 w-[480px]';
+  const verticalClass = overlayPref.expandV ? 'top-4' : 'h-[360px]';
+
+  const onListChange = async (value: string) => {
+    if (value === '__new__') {
+      const name = window.prompt(t('newListPrompt'));
+      if (!name?.trim()) return;
+      const created = await createList(name.trim());
+      if (created) await setActiveList(created.id);
+      return;
+    }
+    await setActiveList(value);
+  };
 
   return (
     <div
-      className={`fixed bottom-4 z-[2147483647] flex flex-col overflow-hidden rounded-lg border border-gray-300 bg-white shadow-2xl ${containerSize}`}>
-      <header className="relative flex items-center justify-between border-b border-gray-200 bg-gray-50 px-3 py-2 text-xs font-semibold">
+      className={`fixed bottom-4 z-[2147483647] flex flex-col overflow-hidden rounded-lg border border-gray-300 bg-white shadow-2xl ${horizontalClass} ${verticalClass}`}>
+      <header
+        className="relative flex items-center justify-between border-b border-gray-200 bg-gray-50 px-3 py-2 text-xs font-semibold"
+        title={t('extensionName')}>
         <span className="flex items-center gap-2">
-          {t('extensionName')}
+          <select
+            value={activeListId}
+            onChange={e => void onListChange(e.target.value)}
+            className="max-w-[180px] rounded border border-gray-300 bg-white px-1.5 py-1 text-xs font-semibold"
+            aria-label={t('activeList')}>
+            {lists.map(l => (
+              <option key={l.id} value={l.id}>
+                {l.name}
+              </option>
+            ))}
+            <option value="__new__">+ {t('newList')}</option>
+          </select>
           {isGeocoding && (
             <span
               className="inline-block h-2 w-2 animate-pulse rounded-full bg-blue-500"
@@ -89,17 +113,24 @@ export default function App() {
             ⚙
           </button>
           <button
-            onClick={() => overlayPrefStorage.set({ ...overlayPref, mode: isMaximized ? 'normal' : 'maximized' })}
-            className="rounded p-1 text-gray-500 hover:bg-gray-200"
-            aria-label={isMaximized ? 'restore' : 'maximize'}
-            title={isMaximized ? t('restore') : t('maximize')}>
-            {isMaximized ? '❐' : '▢'}
+            onClick={() => overlayPrefStorage.set({ ...overlayPref, expandH: !overlayPref.expandH })}
+            className={`rounded p-1 hover:bg-gray-200 ${overlayPref.expandH ? 'text-blue-600' : 'text-gray-500'}`}
+            aria-label="expand-horizontal"
+            title={t('expandHorizontal')}>
+            ↔
           </button>
           <button
-            onClick={() => overlayPrefStorage.set({ ...overlayPref, mode: 'collapsed' })}
+            onClick={() => overlayPrefStorage.set({ ...overlayPref, expandV: !overlayPref.expandV })}
+            className={`rounded p-1 hover:bg-gray-200 ${overlayPref.expandV ? 'text-blue-600' : 'text-gray-500'}`}
+            aria-label="expand-vertical"
+            title={t('expandVertical')}>
+            ↕
+          </button>
+          <button
+            onClick={() => overlayPrefStorage.set({ ...overlayPref, minimized: true })}
             className="rounded p-1 text-gray-500 hover:bg-gray-200"
-            aria-label="collapse"
-            title={t('collapse')}>
+            aria-label="minimize"
+            title={t('minimize')}>
             _
           </button>
         </div>

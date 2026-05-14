@@ -1,3 +1,4 @@
+import { deleteList, downloadListCsv, renameList, useOverlayState } from './store';
 import { t } from '@extension/i18n';
 import { useStorage } from '@extension/shared';
 import { overlayPrefStorage } from '@extension/storage';
@@ -20,6 +21,7 @@ const LABEL_OPTIONS: {
 
 export const Settings = ({ onClose }: Props) => {
   const pref = useStorage(overlayPrefStorage);
+  const { lists } = useOverlayState();
   const [clearing, setClearing] = useState(false);
   const [cleared, setCleared] = useState(false);
 
@@ -28,6 +30,17 @@ export const Settings = ({ onClose }: Props) => {
     await chrome.runtime.sendMessage({ type: 'CLEAR_CACHE' });
     setClearing(false);
     setCleared(true);
+  };
+
+  const onRename = async (id: string, currentName: string) => {
+    const name = window.prompt(t('renameListPrompt'), currentName);
+    if (!name?.trim() || name.trim() === currentName) return;
+    await renameList(id, name.trim());
+  };
+
+  const onDelete = async (id: string, name: string) => {
+    if (!window.confirm(t('deleteListConfirm', [name]))) return;
+    await deleteList(id);
   };
 
   const version = chrome.runtime.getManifest().version;
@@ -60,6 +73,27 @@ export const Settings = ({ onClose }: Props) => {
           className="rounded border border-gray-300 px-3 py-2 text-left text-xs hover:bg-gray-50 disabled:opacity-50">
           {clearing ? t('clearing') : cleared ? t('cleared') : t('clearCache')}
         </button>
+      </div>
+      <div className="flex flex-col gap-1">
+        <div className="text-xs text-gray-600">{t('listsSection')}</div>
+        <ul className="flex flex-col gap-1">
+          {lists.map(l => (
+            <li key={l.id} className="flex items-center gap-2 rounded border border-gray-200 px-2 py-1.5 text-xs">
+              <span className="flex-1 truncate" title={l.name}>
+                {l.name}
+              </span>
+              <button onClick={() => void onRename(l.id, l.name)} className="text-gray-500 hover:text-gray-800">
+                {t('rename')}
+              </button>
+              <button onClick={() => void downloadListCsv(l.id)} className="text-gray-500 hover:text-gray-800">
+                {t('exportCsv')}
+              </button>
+              <button onClick={() => void onDelete(l.id, l.name)} className="text-red-500 hover:text-red-700">
+                {t('delete')}
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
       <div className="mt-auto border-t border-gray-200 pt-3 text-xs text-gray-500">
         <div>

@@ -28,20 +28,20 @@
     "message": "Geocoding by"
   },
   "expand": {
-    "description": "Tooltip for the floating button that expands the overlay",
-    "message": "Expand map"
+    "description": "Tooltip for the floating button that opens the overlay from minimized state",
+    "message": "Open map"
   },
-  "maximize": {
-    "description": "Tooltip for the button that grows the overlay to full width and 50% height",
-    "message": "Maximize"
-  },
-  "restore": {
-    "description": "Tooltip for the button that returns the overlay from maximized to normal size",
-    "message": "Restore"
-  },
-  "collapse": {
+  "minimize": {
     "description": "Tooltip for the button that collapses the overlay into the floating button",
-    "message": "Collapse"
+    "message": "Minimize"
+  },
+  "expandHorizontal": {
+    "description": "Tooltip for the button that expands the overlay to full screen width",
+    "message": "Expand horizontally"
+  },
+  "expandVertical": {
+    "description": "Tooltip for the button that expands the overlay to full screen height",
+    "message": "Expand vertically"
   },
   "favoriteOn": {
     "description": "Label for a listing already marked as favorite",
@@ -94,5 +94,41 @@
   "geocodingInProgress": {
     "description": "Tooltip for the pulsing indicator — $1 = number of addresses pending geocoding",
     "message": "Geocoding $1 addresses…"
+  },
+  "activeList": {
+    "description": "Label for the header dropdown that selects the active list",
+    "message": "Active list"
+  },
+  "newList": {
+    "description": "Dropdown option that creates a new list",
+    "message": "New list"
+  },
+  "newListPrompt": {
+    "description": "Prompt dialog text for naming a new list",
+    "message": "New list name:"
+  },
+  "renameListPrompt": {
+    "description": "Prompt dialog text for renaming a list",
+    "message": "New list name:"
+  },
+  "deleteListConfirm": {
+    "description": "Confirmation message shown before deleting a list — $1 = list name",
+    "message": "Delete list \"$1\" and any listings not present in another list?"
+  },
+  "listsSection": {
+    "description": "Lists section heading in Settings",
+    "message": "Lists"
+  },
+  "rename": {
+    "description": "Button to rename a list",
+    "message": "Rename"
+  },
+  "delete": {
+    "description": "Button to delete a list",
+    "message": "Delete"
+  },
+  "exportCsv": {
+    "description": "Button to export a list to CSV",
+    "message": "Export CSV"
   }
 }

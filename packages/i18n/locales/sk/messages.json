@@ -28,20 +28,20 @@
     "message": "Geokódovanie"
   },
   "expand": {
-    "description": "Tooltip plávajúceho tlačidla na rozbalenie overlayu",
-    "message": "Rozbaliť mapu"
+    "description": "Tooltip plávajúceho tlačidla na otvorenie overlayu z minimalizovaného stavu",
+    "message": "Otvoriť mapu"
   },
-  "collapse": {
+  "minimize": {
     "description": "Tooltip tlačidla, ktoré zbalí overlay do plávajúceho tlačidla",
-    "message": "Zbaliť"
+    "message": "Minimalizovať"
   },
-  "maximize": {
-    "description": "Tooltip tlačidla, ktoré zväčší overlay na plnú šírku a 50 % výšky",
-    "message": "Roztiahnuť"
+  "expandHorizontal": {
+    "description": "Tooltip tlačidla, ktoré roztiahne overlay na plnú šírku obrazovky",
+    "message": "Roztiahnuť horizontálne"
   },
-  "restore": {
-    "description": "Tooltip tlačidla, ktoré vráti overlay z maximized späť do normálnej veľkosti",
-    "message": "Späť do okna"
+  "expandVertical": {
+    "description": "Tooltip tlačidla, ktoré roztiahne overlay na plnú výšku obrazovky",
+    "message": "Roztiahnuť vertikálne"
   },
   "favoriteOn": {
     "description": "Stav označeného obľúbeného inzerátu",
@@ -94,5 +94,41 @@
   "geocodingInProgress": {
     "description": "Tooltip pulzujúceho indikátora — $1 = počet adries čakajúcich na geokódovanie",
     "message": "Geokóduje sa $1 adries…"
+  },
+  "activeList": {
+    "description": "Štítok dropdownu v hlavičke pre výber aktívneho zoznamu",
+    "message": "Aktívny zoznam"
+  },
+  "newList": {
+    "description": "Možnosť v dropdowne, ktorá vytvorí nový zoznam",
+    "message": "Nový zoznam"
+  },
+  "newListPrompt": {
+    "description": "Text v dialógu prompt na zadanie názvu nového zoznamu",
+    "message": "Názov nového zoznamu:"
+  },
+  "renameListPrompt": {
+    "description": "Text v dialógu prompt na premenovanie zoznamu",
+    "message": "Nový názov zoznamu:"
+  },
+  "deleteListConfirm": {
+    "description": "Potvrdzovacia hláška pred zmazaním zoznamu — $1 = názov zoznamu",
+    "message": "Zmazať zoznam \"$1\" a všetky jeho inzeráty, ktoré nie sú v inom zozname?"
+  },
+  "listsSection": {
+    "description": "Nadpis sekcie zoznamov v Nastaveniach",
+    "message": "Zoznamy"
+  },
+  "rename": {
+    "description": "Tlačidlo na premenovanie zoznamu",
+    "message": "Premenovať"
+  },
+  "delete": {
+    "description": "Tlačidlo na zmazanie zoznamu",
+    "message": "Zmazať"
+  },
+  "exportCsv": {
+    "description": "Tlačidlo na export zoznamu do CSV",
+    "message": "Export CSV"
   }
 }

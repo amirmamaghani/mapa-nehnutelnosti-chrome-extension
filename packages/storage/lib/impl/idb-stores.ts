@@ -7,6 +7,7 @@ import { createStore, del, get as idbGet, keys as idbKeys, set as idbSet } from 
 const geocodesStore = createStore('mapa-nehnutelnosti-geocodes', 'geocodes');
 const listingsStore = createStore('mapa-nehnutelnosti-listings', 'listings');
 const favoritesStore = createStore('mapa-nehnutelnosti-favorites', 'favorites');
+const listsStore = createStore('mapa-nehnutelnosti-lists', 'lists');
 
 type GeocodeHit = { lat: number; lng: number; expiresAt: number };
 type GeocodeMiss = { miss: true; expiresAt: number };
@@ -81,12 +82,48 @@ const clearListings = async (): Promise<void> => {
   await Promise.all(ks.map(k => del(k, listingsStore)));
 };
 
+// --- lists ---
+
+type ListRecord = { id: string; name: string; createdAt: number };
+
+const readList = (id: string): Promise<ListRecord | undefined> => idbGet<ListRecord>(id, listsStore);
+
+const writeList = (record: ListRecord): Promise<void> => idbSet(record.id, record, listsStore);
+
+const deleteList = (id: string): Promise<void> => del(id, listsStore);
+
+const listAllLists = async (): Promise<ListRecord[]> => {
+  const ks = (await idbKeys(listsStore)) as string[];
+  const vs = await Promise.all(ks.map(k => idbGet<ListRecord>(k, listsStore)));
+  return vs.filter((v): v is ListRecord => !!v).sort((a, b) => a.createdAt - b.createdAt);
+};
+
+// Cascade: drop the listId from every listing's listIds. Listings with no
+// remaining membership are deleted entirely.
+const cascadeRemoveListIdFromListings = async <T extends { id: string; expiresAt: number; listIds: string[] }>(
+  listId: string,
+): Promise<void> => {
+  const all = await listAllListings<T>();
+  await Promise.all(
+    all.map(async listing => {
+      if (!listing.listIds.includes(listId)) return;
+      const remaining = listing.listIds.filter(id => id !== listId);
+      if (remaining.length === 0) {
+        await del(listing.id, listingsStore);
+      } else {
+        await idbSet(listing.id, { ...listing, listIds: remaining }, listingsStore);
+      }
+    }),
+  );
+};
+
 const normalizeAddress = (raw: string): string => raw.trim().toLowerCase().replace(/\s+/g, ' ');
 
 export {
   geocodesStore,
   listingsStore,
   favoritesStore,
+  listsStore,
   readGeocode,
   writeGeocode,
   readListing,
@@ -99,9 +136,14 @@ export {
   listFavorites,
   clearGeocodes,
   clearListings,
+  readList,
+  writeList,
+  deleteList,
+  listAllLists,
+  cascadeRemoveListIdFromListings,
   normalizeAddress,
   GEOCODE_HIT_TTL_MS,
   GEOCODE_MISS_TTL_MS,
   LISTING_TTL_MS,
 };
-export type { GeocodeHit, GeocodeMiss, GeocodeRecord };
+export type { GeocodeHit, GeocodeMiss, GeocodeRecord, ListRecord };

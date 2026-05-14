@@ -17,8 +17,16 @@ export type RawListing = {
 
 export type Listing = RawListing & {
   id: string;
+  /** Listing belongs to one or more user-defined lists. */
+  listIds: string[];
   coord?: GeoPoint;
   expiresAt: number;
+};
+
+export type ListingList = {
+  id: string;
+  name: string;
+  createdAt: number;
 };
 
 export const listingIdOf = (site: SiteId, siteListingId: string): string => `${site}:${siteListingId}`;

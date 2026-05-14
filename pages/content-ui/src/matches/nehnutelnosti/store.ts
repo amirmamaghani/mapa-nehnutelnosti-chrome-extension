@@ -1,11 +1,14 @@
+import { overlayPrefStorage } from '@extension/storage';
 import { useSyncExternalStore } from 'react';
-import type { GeoPoint, Listing, RawListing, RuntimeMessage } from '@extension/shared';
+import type { GeoPoint, Listing, ListingList, RawListing, RuntimeMessage } from '@extension/shared';
 
 type State = {
   listings: Map<string, Listing>;
   favorites: Set<string>;
   failedIds: Set<string>;
   selectedId: string | null;
+  lists: ListingList[];
+  activeListId: string;
 };
 
 const state: State = {
@@ -13,6 +16,8 @@ const state: State = {
   favorites: new Set(),
   failedIds: new Set(),
   selectedId: null,
+  lists: [],
+  activeListId: '',
 };
 
 const computeSnapshot = () => ({
@@ -20,6 +25,8 @@ const computeSnapshot = () => ({
   favorites: new Set(state.favorites),
   failedIds: new Set(state.failedIds),
   selectedId: state.selectedId,
+  lists: state.lists.slice(),
+  activeListId: state.activeListId,
 });
 
 const listeners = new Set<() => void>();
@@ -48,6 +55,7 @@ const ingestExtracted = (raws: RawListing[]) => {
     state.listings.set(id, {
       ...raw,
       id,
+      listIds: existing?.listIds ?? (state.activeListId ? [state.activeListId] : []),
       coord: existing?.coord,
       expiresAt: existing?.expiresAt ?? Date.now() + 7 * 24 * 60 * 60 * 1000,
     });
@@ -89,24 +97,76 @@ const toggleFavorite = (id: string) => {
 
 const checkFavorite = (id: string) => state.favorites.has(id);
 
-// Pull listings + favorites from the background-owned IndexedDB. Content
-// scripts have a different IDB origin (host page's) than the background
-// (extension's), so this must be a message round-trip.
+// Pull listings + favorites + lists from the background-owned IndexedDB.
+// Content scripts have a different IDB origin (host page's) than the
+// background (extension's), so this must be a message round-trip.
 const hydrateFromBackground = async () => {
   try {
     const resp = (await chrome.runtime.sendMessage({ type: 'HYDRATE_REQUEST' })) as
-      | { type: 'HYDRATE_RESPONSE'; listings: Listing[]; favorites: string[] }
+      | {
+          type: 'HYDRATE_RESPONSE';
+          listings: Listing[];
+          favorites: string[];
+          lists: ListingList[];
+          activeListId: string;
+        }
       | undefined;
     if (!resp) return;
-    for (const listing of resp.listings) {
-      const existing = state.listings.get(listing.id);
-      state.listings.set(listing.id, { ...listing, coord: existing?.coord ?? listing.coord });
-    }
+    state.listings.clear();
+    for (const listing of resp.listings) state.listings.set(listing.id, listing);
     state.favorites = new Set(resp.favorites);
+    state.lists = resp.lists;
+    state.activeListId = resp.activeListId;
     emit();
   } catch (err) {
     console.warn('[mapa-nehnutelnosti] hydrate failed', err);
   }
+};
+
+const setActiveList = async (id: string) => {
+  const pref = await overlayPrefStorage.get();
+  await overlayPrefStorage.set({ ...pref, activeListId: id });
+  state.activeListId = id;
+  state.listings.clear();
+  emit();
+  await hydrateFromBackground();
+};
+
+const createList = async (name: string): Promise<ListingList | null> => {
+  const resp = (await chrome.runtime.sendMessage({ type: 'CREATE_LIST', name })) as
+    | { type: 'CREATE_LIST_RESPONSE'; list: ListingList }
+    | undefined;
+  if (!resp?.list) return null;
+  state.lists = [...state.lists, resp.list];
+  emit();
+  return resp.list;
+};
+
+const renameList = async (id: string, name: string) => {
+  await chrome.runtime.sendMessage({ type: 'RENAME_LIST', id, name });
+  state.lists = state.lists.map(l => (l.id === id ? { ...l, name } : l));
+  emit();
+};
+
+const deleteList = async (id: string) => {
+  await chrome.runtime.sendMessage({ type: 'DELETE_LIST', id });
+  state.lists = state.lists.filter(l => l.id !== id);
+  emit();
+  // Background may have reassigned activeListId; refresh to be safe.
+  await hydrateFromBackground();
+};
+
+const downloadListCsv = async (id: string) => {
+  const resp = (await chrome.runtime.sendMessage({ type: 'EXPORT_LIST_CSV', id })) as
+    | { type: 'EXPORT_LIST_CSV_RESPONSE'; csv: string; name: string }
+    | undefined;
+  if (!resp) return;
+  const url = URL.createObjectURL(new Blob([resp.csv], { type: 'text/csv;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = resp.name;
+  a.click();
+  URL.revokeObjectURL(url);
 };
 
 const handleRuntimeMessage = (msg: RuntimeMessage) => {
@@ -147,4 +207,9 @@ export {
   checkFavorite,
   hydrateFromBackground,
   handleRuntimeMessage,
+  setActiveList,
+  createList,
+  renameList,
+  deleteList,
+  downloadListCsv,
 };

@@ -2,28 +2,36 @@ import 'webextension-polyfill';
 import { listingIdOf } from '@extension/shared';
 import {
   addFavorite,
+  cascadeRemoveListIdFromListings,
   clearGeocodes,
   clearListings,
+  deleteList,
   GEOCODE_HIT_TTL_MS,
   GEOCODE_MISS_TTL_MS,
   LISTING_TTL_MS,
   listAllListings,
+  listAllLists,
   listFavorites,
   normalizeAddress,
+  overlayPrefStorage,
   patchListing,
   readGeocode,
+  readList,
   readListing,
   removeFavorite,
   writeGeocode,
+  writeList,
   writeListing,
 } from '@extension/storage';
-import type { Listing, RawListing, RuntimeMessage } from '@extension/shared';
+import type { Listing, ListingList, RawListing, RuntimeMessage } from '@extension/shared';
+import type { ListRecord } from '@extension/storage';
 
 const NOMINATIM_BASE = 'https://nominatim.openstreetmap.org/search';
 const REQUEST_SPACING_MS = 1100;
 const PAUSE_ON_ERROR_MS = 30 * 1000;
 const USER_AGENT_VERSION = chrome.runtime.getManifest().version;
 const USER_AGENT = `Mapa-Nehnutelnosti/${USER_AGENT_VERSION} (https://github.com/em/mapa-nehnutelnosti-chrome-extension)`;
+const DEFAULT_LIST_NAME = 'Predvolený zoznam';
 
 type QueueItem = {
   address: string;
@@ -122,9 +130,6 @@ const runQueue = async () => {
   }
 };
 
-// Dedup per-listing — different listings that share an address still each
-// queue and each get their coord written, even though Nominatim is only hit
-// once (via the geocode cache).
 const enqueue = (item: QueueItem) => {
   if (enqueued.has(item.listingId)) return;
   enqueued.add(item.listingId);
@@ -132,23 +137,50 @@ const enqueue = (item: QueueItem) => {
   void runQueue();
 };
 
+const ensureActiveList = async (): Promise<string> => {
+  const pref = await overlayPrefStorage.get();
+  if (pref.activeListId) {
+    const existing = await readList(pref.activeListId);
+    if (existing) return existing.id;
+  }
+  // Fall through: either no activeListId or it's been deleted. Pick the
+  // oldest list, or create the default.
+  const all = await listAllLists();
+  if (all.length > 0) {
+    await overlayPrefStorage.set({ ...pref, activeListId: all[0].id });
+    return all[0].id;
+  }
+  const created: ListRecord = {
+    id: `list-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+    name: DEFAULT_LIST_NAME,
+    createdAt: Date.now(),
+  };
+  await writeList(created);
+  await overlayPrefStorage.set({ ...pref, activeListId: created.id });
+  return created.id;
+};
+
+const toListingList = (r: ListRecord): ListingList => ({ id: r.id, name: r.name, createdAt: r.createdAt });
+
 const handleListingsExtracted = async (listings: RawListing[], tabId: number) => {
   const now = Date.now();
+  const activeListId = await ensureActiveList();
 
   // Inform the overlay immediately so it can render listings before any IDB
   // or geocoding work finishes.
   broadcast(tabId, { type: 'LISTINGS_EXTRACTED', listings });
 
-  // Per listing: merge with any existing record (to preserve a known coord),
-  // write it back, and either re-broadcast the cached coord or enqueue a new
-  // geocode. All in parallel so 30 listings cost ~one IDB round-trip, not 30.
   await Promise.all(
     listings.map(async raw => {
       const id = listingIdOf(raw.site, raw.siteListingId);
       const existing = await readListing<Listing>(id);
+      const listIds = existing?.listIds?.includes(activeListId)
+        ? existing.listIds
+        : [...(existing?.listIds ?? []), activeListId];
       await writeListing(id, {
         ...raw,
         id,
+        listIds,
         coord: existing?.coord,
         expiresAt: now + LISTING_TTL_MS,
       });
@@ -165,13 +197,90 @@ const handleListingsExtracted = async (listings: RawListing[], tabId: number) =>
   );
 };
 
+const csvEscape = (v: unknown): string => {
+  const s = v == null ? '' : String(v);
+  if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+  return s;
+};
+
+const listingsToCsv = (rows: Listing[]): string => {
+  const header = ['id', 'site', 'title', 'url', 'addressRaw', 'priceEur', 'areaSqm', 'lat', 'lng', 'thumbnailUrl'];
+  const lines = [header.join(',')];
+  for (const r of rows) {
+    lines.push(
+      [
+        r.id,
+        r.site,
+        r.title,
+        r.url,
+        r.addressRaw,
+        r.priceEur ?? '',
+        r.areaSqm ?? '',
+        r.coord?.lat ?? '',
+        r.coord?.lng ?? '',
+        r.thumbnailUrl ?? '',
+      ]
+        .map(csvEscape)
+        .join(','),
+    );
+  }
+  return lines.join('\n');
+};
+
+const handleHydrate = async () => {
+  const activeListId = await ensureActiveList();
+  const [listings, favorites, lists] = await Promise.all([listAllListings<Listing>(), listFavorites(), listAllLists()]);
+  // Filter listings by active list — map shows only the current list.
+  const filtered = listings.filter(l => l.listIds?.includes(activeListId));
+  return {
+    type: 'HYDRATE_RESPONSE' as const,
+    listings: filtered,
+    favorites,
+    lists: lists.map(toListingList),
+    activeListId,
+  };
+};
+
+const handleCreateList = async (name: string): Promise<ListingList> => {
+  const list: ListRecord = {
+    id: `list-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+    name: name.trim() || 'Nový zoznam',
+    createdAt: Date.now(),
+  };
+  await writeList(list);
+  return toListingList(list);
+};
+
+const handleRenameList = async (id: string, name: string) => {
+  const existing = await readList(id);
+  if (!existing) return;
+  await writeList({ ...existing, name: name.trim() || existing.name });
+};
+
+const handleDeleteList = async (id: string) => {
+  await cascadeRemoveListIdFromListings<Listing>(id);
+  await deleteList(id);
+  // If the deleted list was active, fall back to another (auto-creating one if needed).
+  const pref = await overlayPrefStorage.get();
+  if (pref.activeListId === id) {
+    await overlayPrefStorage.set({ ...pref, activeListId: '' });
+    await ensureActiveList();
+  }
+};
+
+const handleExportListCsv = async (id: string) => {
+  const list = await readList(id);
+  if (!list) return { csv: '', name: 'export.csv' };
+  const all = await listAllListings<Listing>();
+  const rows = all.filter(l => l.listIds?.includes(id));
+  return { csv: listingsToCsv(rows), name: `${list.name.replace(/[^\w-]+/g, '_')}.csv` };
+};
+
 chrome.runtime.onMessage.addListener((message: RuntimeMessage, sender, sendResponse) => {
   const tabId = sender.tab?.id;
 
   if (message.type === 'HYDRATE_REQUEST') {
-    void Promise.all([listAllListings<Listing>(), listFavorites()]).then(([listings, favorites]) => {
-      sendResponse({ type: 'HYDRATE_RESPONSE', listings, favorites });
-    });
+    void handleHydrate().then(sendResponse);
     return true;
   }
 
@@ -183,6 +292,25 @@ chrome.runtime.onMessage.addListener((message: RuntimeMessage, sender, sendRespo
 
   if (message.type === 'CLEAR_CACHE') {
     void Promise.all([clearGeocodes(), clearListings()]).then(() => sendResponse({ ok: true }));
+    return true;
+  }
+
+  if (message.type === 'CREATE_LIST') {
+    void handleCreateList(message.name).then(list => sendResponse({ type: 'CREATE_LIST_RESPONSE', list }));
+    return true;
+  }
+  if (message.type === 'RENAME_LIST') {
+    void handleRenameList(message.id, message.name).then(() => sendResponse({ ok: true }));
+    return true;
+  }
+  if (message.type === 'DELETE_LIST') {
+    void handleDeleteList(message.id).then(() => sendResponse({ ok: true }));
+    return true;
+  }
+  if (message.type === 'EXPORT_LIST_CSV') {
+    void handleExportListCsv(message.id).then(({ csv, name }) =>
+      sendResponse({ type: 'EXPORT_LIST_CSV_RESPONSE', csv, name }),
+    );
     return true;
   }
 
