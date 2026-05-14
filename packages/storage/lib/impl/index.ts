@@ -1,1 +1,2 @@
-export * from './example-theme-storage.js';
+export * from './overlay-pref-storage.js';
+export * from './idb-stores.js';

@@ -1,0 +1,52 @@
+@import '@extension/ui/global.css';
+@import 'leaflet/dist/leaflet.css';
+
+#mn-overlay-root {
+  all: initial;
+}
+
+.mn-range-dual {
+  position: relative;
+  height: 20px;
+}
+.mn-range-dual input[type='range'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.mn-range-dual input[type='range']::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 4px;
+}
+.mn-range-dual input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  margin-top: -5px;
+}
+.mn-range-dual input[type='range']::-moz-range-thumb {
+  pointer-events: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.mn-range-dual input[type='range']::-moz-range-track {
+  background: transparent;
+  height: 4px;
+}

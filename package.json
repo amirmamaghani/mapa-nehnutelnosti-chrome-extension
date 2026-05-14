@@ -1,14 +1,14 @@
 {
-  "name": "chrome-extension-boilerplate-react-vite",
+  "name": "mapa-nehnutelnosti-chrome-extension",
   "version": "0.5.0",
-  "description": "chrome extension boilerplate",
+  "description": "Chrome rozšírenie pre nehnutelnosti.sk — interaktívna mapa inzerátov s OpenStreetMap, geokódovaním cez Nominatim, filtrami (cena, plocha) a obľúbenými.",
+  "author": {
+    "name": "Amir Mamaghani",
+    "email": "amir@mamaghani.io"
+  },
   "license": "MIT",
   "private": true,
   "sideEffects": false,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite.git"
-  },
   "type": "module",
   "scripts": {
     "clean:bundle": "rimraf dist && turbo clean:bundle",

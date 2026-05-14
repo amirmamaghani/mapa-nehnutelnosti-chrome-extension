@@ -1,45 +1,122 @@
 {
-  "extensionDescription": {
-    "description": "Extension description",
-    "message": "Chrome extension boilerplate developed with Vite, React and Typescript"
-  },
   "extensionName": {
-    "description": "Extension name",
-    "message": "Chrome extension boilerplate"
+    "description": "Extension name shown in the Web Store and chrome://extensions",
+    "message": "Mapa Nehnuteľností"
   },
-  "toggleTheme": {
-    "message": "Toggle theme"
+  "extensionDescription": {
+    "description": "Extension description shown in the Web Store and chrome://extensions",
+    "message": "Interactive map overlay for nehnutelnosti.sk — addresses from listings are auto-geocoded onto OpenStreetMap and shown as markers with price, area or title. Filters by price and area, favorites, local cache."
   },
-  "injectButton": {
-    "message": "Click to inject Content Scripts"
+  "settingsTitle": {
+    "description": "Settings dialog heading",
+    "message": "Settings"
   },
-  "greeting": {
-    "description": "Greeting message",
-    "message": "Hello, My name is $NAME$",
-    "placeholders": {
-      "name": {
-        "content": "$1",
-        "example": "John Doe"
-      }
-    }
+  "clearCache": {
+    "description": "Button that clears the geocoding cache",
+    "message": "Clear cache"
   },
-  "hello": {
-    "description": "Placeholder example",
-    "message": "Hello $1"
+  "clearing": {
+    "description": "Status while the cache is being cleared",
+    "message": "Clearing…"
+  },
+  "cleared": {
+    "description": "Status after the cache has been cleared",
+    "message": "Cleared"
+  },
+  "geocodingBy": {
+    "description": "Footer credit for the geocoding service",
+    "message": "Geocoding by"
+  },
+  "expand": {
+    "description": "Tooltip for the floating button that expands the overlay",
+    "message": "Expand map"
+  },
+  "maximize": {
+    "description": "Tooltip for the button that grows the overlay to full width and 50% height",
+    "message": "Maximize"
+  },
+  "restore": {
+    "description": "Tooltip for the button that returns the overlay from maximized to normal size",
+    "message": "Restore"
+  },
+  "collapse": {
+    "description": "Tooltip for the button that collapses the overlay into the floating button",
+    "message": "Collapse"
+  },
+  "favoriteOn": {
+    "description": "Label for a listing already marked as favorite",
+    "message": "Favorite"
+  },
+  "favoriteOff": {
+    "description": "Label for a listing not yet marked as favorite",
+    "message": "Favorite"
+  },
+  "showOnPage": {
+    "description": "Button that scrolls the listing into view on the host page",
+    "message": "Show on page"
+  },
+  "priceUpTo": {
+    "description": "Label for the max-price slider",
+    "message": "Price up to"
+  },
+  "areaUpTo": {
+    "description": "Label for the max-area slider (legacy)",
+    "message": "Area up to"
+  },
+  "areaRange": {
+    "description": "Label for the dual-handle area range slider",
+    "message": "Area"
+  },
+  "markerLabelSetting": {
+    "description": "Label for the dropdown in Settings that picks the marker label type",
+    "message": "Marker label"
+  },
+  "markerLabelToggle": {
+    "description": "Tooltip for the header button that cycles the marker label type",
+    "message": "Toggle marker label"
+  },
+  "markerLabelNone": {
+    "description": "Option: render markers as plain dots without a label",
+    "message": "Dot"
+  },
+  "markerLabelPrice": {
+    "description": "Option: render the listing price as the marker label",
+    "message": "Price"
+  },
+  "markerLabelTitle": {
+    "description": "Option: render the listing title as the marker label",
+    "message": "Title"
+  },
+  "markerLabelArea": {
+    "description": "Option: render the listing area in m² as the marker label",
+    "message": "Area"
+  },
+  "geocodedOf": {
+    "description": "Footer counter — $1 = geocoded count, $2 = total addressable listings",
+    "message": "Geocoded $1 / $2"
+  },
+  "geocodingInProgress": {
+    "description": "Tooltip for the pulsing indicator — $1 = number of addresses pending geocoding",
+    "message": "Geocoding $1 addresses…"
   },
   "displayErrorInfo": {
-    "message": "Error occur"
+    "description": "Heading on the error fallback screen",
+    "message": "An error occurred"
   },
   "displayErrorDescription": {
-    "message": "Sorry, something went wrong while loading the page."
+    "description": "Body text on the error fallback screen",
+    "message": "Something went wrong while loading."
   },
   "displayErrorDetailsInfo": {
-    "message": "Error details:"
+    "description": "Label preceding the technical error details",
+    "message": "Details:"
   },
   "displayErrorUnknownErrorInfo": {
+    "description": "Fallback text for unknown errors",
     "message": "Unknown error"
   },
   "displayErrorReset": {
-    "message": "Run Again"
+    "description": "Button that retries after an error",
+    "message": "Try again"
   }
 }

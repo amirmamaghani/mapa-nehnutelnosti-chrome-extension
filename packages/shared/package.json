@@ -23,6 +23,7 @@
     "postinstall": "pnpm ready"
   },
   "dependencies": {
+    "idb-keyval": "^6.2.2",
     "react-error-boundary": "^6.0.0"
   },
   "devDependencies": {

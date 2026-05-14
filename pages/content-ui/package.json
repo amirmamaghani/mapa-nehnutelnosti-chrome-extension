@@ -21,15 +21,18 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@extension/shared": "workspace:*",
-    "@extension/ui": "workspace:*",
+    "@extension/env": "workspace:*",
     "@extension/i18n": "workspace:*",
-    "@extension/env": "workspace:*"
+    "@extension/shared": "workspace:*",
+    "@extension/storage": "workspace:*",
+    "@extension/ui": "workspace:*",
+    "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "@extension/hmr": "workspace:*",
     "@extension/tailwindcss-config": "workspace:*",
     "@extension/tsconfig": "workspace:*",
-    "@extension/vite-config": "workspace:*"
+    "@extension/vite-config": "workspace:*",
+    "@types/leaflet": "^1.9.21"
   }
 }

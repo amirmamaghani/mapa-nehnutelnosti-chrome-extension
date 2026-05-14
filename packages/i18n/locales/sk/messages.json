@@ -1,0 +1,122 @@
+{
+  "extensionName": {
+    "description": "Názov rozšírenia",
+    "message": "Mapa Nehnuteľností"
+  },
+  "extensionDescription": {
+    "description": "Popis rozšírenia v Chrome Web Store a chrome://extensions",
+    "message": "Interaktívna mapa inzerátov pre nehnutelnosti.sk — adresy z výpisu sa automaticky geokódujú na OpenStreetMap a zobrazia ako značky s cenou, plochou alebo názvom. Filtre podľa ceny a plochy, obľúbené, lokálna cache."
+  },
+  "settingsTitle": {
+    "description": "Nadpis dialógu nastavení",
+    "message": "Nastavenia"
+  },
+  "clearCache": {
+    "description": "Tlačidlo na vymazanie geokódovacej cache",
+    "message": "Vymazať cache"
+  },
+  "clearing": {
+    "description": "Stav počas mazania cache",
+    "message": "Maže sa…"
+  },
+  "cleared": {
+    "description": "Stav po vymazaní cache",
+    "message": "Vymazané"
+  },
+  "geocodingBy": {
+    "description": "Kredit pre geokódovaciu službu v pätičke",
+    "message": "Geokódovanie"
+  },
+  "expand": {
+    "description": "Tooltip plávajúceho tlačidla na rozbalenie overlayu",
+    "message": "Rozbaliť mapu"
+  },
+  "collapse": {
+    "description": "Tooltip tlačidla, ktoré zbalí overlay do plávajúceho tlačidla",
+    "message": "Zbaliť"
+  },
+  "maximize": {
+    "description": "Tooltip tlačidla, ktoré zväčší overlay na plnú šírku a 50 % výšky",
+    "message": "Roztiahnuť"
+  },
+  "restore": {
+    "description": "Tooltip tlačidla, ktoré vráti overlay z maximized späť do normálnej veľkosti",
+    "message": "Späť do okna"
+  },
+  "favoriteOn": {
+    "description": "Stav označeného obľúbeného inzerátu",
+    "message": "Obľúbené"
+  },
+  "favoriteOff": {
+    "description": "Stav neoznačeného obľúbeného inzerátu",
+    "message": "Obľúbené"
+  },
+  "showOnPage": {
+    "description": "Tlačidlo na zobrazenie inzerátu vo výpise stránky",
+    "message": "Ukázať na stránke"
+  },
+  "priceUpTo": {
+    "description": "Štítok slidera maximálnej ceny",
+    "message": "Cena do"
+  },
+  "areaUpTo": {
+    "description": "Štítok slidera maximálnej plochy (legacy)",
+    "message": "Plocha do"
+  },
+  "areaRange": {
+    "description": "Štítok dual-handle slidera rozsahu plochy",
+    "message": "Plocha"
+  },
+  "markerLabelSetting": {
+    "description": "Štítok dropdownu v Nastaveniach pre výber typu štítku markera",
+    "message": "Štítok markera"
+  },
+  "markerLabelToggle": {
+    "description": "Tooltip tlačidla v hlavičke, ktoré cyklí typ štítku markera",
+    "message": "Prepnúť štítok markera"
+  },
+  "markerLabelNone": {
+    "description": "Možnosť: zobraziť marker ako bodku bez štítku",
+    "message": "Bodka"
+  },
+  "markerLabelPrice": {
+    "description": "Možnosť: zobraziť cenu ako štítok markera",
+    "message": "Cena"
+  },
+  "markerLabelTitle": {
+    "description": "Možnosť: zobraziť názov inzerátu ako štítok markera",
+    "message": "Názov"
+  },
+  "markerLabelArea": {
+    "description": "Možnosť: zobraziť plochu v m² ako štítok markera",
+    "message": "Plocha"
+  },
+  "geocodedOf": {
+    "description": "Pätička overlayu — $1 = počet geokódovaných, $2 = počet všetkých adresovateľných",
+    "message": "Geokódované $1 / $2"
+  },
+  "geocodingInProgress": {
+    "description": "Tooltip pulzujúceho indikátora — $1 = počet adries čakajúcich na geokódovanie",
+    "message": "Geokóduje sa $1 adries…"
+  },
+  "displayErrorInfo": {
+    "description": "Nadpis chybovej obrazovky",
+    "message": "Nastala chyba"
+  },
+  "displayErrorDescription": {
+    "description": "Popis chybovej obrazovky",
+    "message": "Pri načítavaní sa niečo pokazilo."
+  },
+  "displayErrorDetailsInfo": {
+    "description": "Štítok pred technickými detailmi chyby",
+    "message": "Detaily:"
+  },
+  "displayErrorUnknownErrorInfo": {
+    "description": "Fallback text pri neznámej chybe",
+    "message": "Neznáma chyba"
+  },
+  "displayErrorReset": {
+    "description": "Tlačidlo na opätovný pokus po chybe",
+    "message": "Skúsiť znova"
+  }
+}
