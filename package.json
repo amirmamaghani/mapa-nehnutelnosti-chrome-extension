@@ -1,6 +1,6 @@
 {
   "name": "mapa-nehnutelnosti-chrome-extension",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Chrome rozšírenie pre nehnutelnosti.sk — interaktívna mapa inzerátov s OpenStreetMap, geokódovaním cez Nominatim, filtrami (cena, plocha) a obľúbenými.",
   "author": {
     "name": "Amir Mamaghani",
