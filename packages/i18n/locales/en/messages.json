@@ -59,10 +59,6 @@
     "description": "Label for the max-price slider",
     "message": "Price up to"
   },
-  "areaUpTo": {
-    "description": "Label for the max-area slider (legacy)",
-    "message": "Area up to"
-  },
   "areaRange": {
     "description": "Label for the dual-handle area range slider",
     "message": "Area"
@@ -98,25 +94,5 @@
   "geocodingInProgress": {
     "description": "Tooltip for the pulsing indicator — $1 = number of addresses pending geocoding",
     "message": "Geocoding $1 addresses…"
-  },
-  "displayErrorInfo": {
-    "description": "Heading on the error fallback screen",
-    "message": "An error occurred"
-  },
-  "displayErrorDescription": {
-    "description": "Body text on the error fallback screen",
-    "message": "Something went wrong while loading."
-  },
-  "displayErrorDetailsInfo": {
-    "description": "Label preceding the technical error details",
-    "message": "Details:"
-  },
-  "displayErrorUnknownErrorInfo": {
-    "description": "Fallback text for unknown errors",
-    "message": "Unknown error"
-  },
-  "displayErrorReset": {
-    "description": "Button that retries after an error",
-    "message": "Try again"
   }
 }

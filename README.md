@@ -26,6 +26,12 @@ Pri prehliadaní výpisu inzerátov na nehnutelnosti.sk sa v rohu stránky objav
 - **Lokálna cache** — geokódované súradnice sa cachujú v IndexedDB, takže sa pri opätovnej návšteve neopytujú znova
 - **Slovenčina + angličtina**
 
+## Inštalácia
+
+Stiahni najnovší build zo sekcie [Releases](../../releases/latest), rozbaľ a v `chrome://extensions` zapni **Developer mode** → **Load unpacked** → vyber rozbalený priečinok.
+
+Pre Firefox je v každej release-i tiež `.xpi` súbor.
+
 ## Inštalácia (vývoj)
 
 Repozitár používa **pnpm** workspaces a **Turborepo**.

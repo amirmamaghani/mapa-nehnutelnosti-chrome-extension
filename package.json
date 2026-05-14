@@ -34,7 +34,6 @@
     "update-version": "bash bash-scripts/update_version.sh",
     "copy-env": "bash bash-scripts/copy_env.sh",
     "set-global-env": "bash bash-scripts/set_global_env.sh",
-    "module-manager": "pnpm -F module-manager start",
     "postinstall": "pnpm copy-env"
   },
   "dependencies": {

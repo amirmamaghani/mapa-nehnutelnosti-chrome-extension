@@ -59,10 +59,6 @@
     "description": "Štítok slidera maximálnej ceny",
     "message": "Cena do"
   },
-  "areaUpTo": {
-    "description": "Štítok slidera maximálnej plochy (legacy)",
-    "message": "Plocha do"
-  },
   "areaRange": {
     "description": "Štítok dual-handle slidera rozsahu plochy",
     "message": "Plocha"
@@ -98,25 +94,5 @@
   "geocodingInProgress": {
     "description": "Tooltip pulzujúceho indikátora — $1 = počet adries čakajúcich na geokódovanie",
     "message": "Geokóduje sa $1 adries…"
-  },
-  "displayErrorInfo": {
-    "description": "Nadpis chybovej obrazovky",
-    "message": "Nastala chyba"
-  },
-  "displayErrorDescription": {
-    "description": "Popis chybovej obrazovky",
-    "message": "Pri načítavaní sa niečo pokazilo."
-  },
-  "displayErrorDetailsInfo": {
-    "description": "Štítok pred technickými detailmi chyby",
-    "message": "Detaily:"
-  },
-  "displayErrorUnknownErrorInfo": {
-    "description": "Fallback text pri neznámej chybe",
-    "message": "Neznáma chyba"
-  },
-  "displayErrorReset": {
-    "description": "Tlačidlo na opätovný pokus po chybe",
-    "message": "Skúsiť znova"
   }
 }

@@ -1,4 +1,4 @@
-@import '@extension/ui/global.css';
+@import '../../../global.css';
 @import 'leaflet/dist/leaflet.css';
 
 #mn-overlay-root {

@@ -25,7 +25,6 @@
     "@extension/i18n": "workspace:*",
     "@extension/shared": "workspace:*",
     "@extension/storage": "workspace:*",
-    "@extension/ui": "workspace:*",
     "leaflet": "^1.9.4"
   },
   "devDependencies": {

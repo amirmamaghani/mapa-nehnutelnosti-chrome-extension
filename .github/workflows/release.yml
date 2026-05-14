@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Build & zip (Chrome)
+        run: pnpm zip
+
+      - name: Build & zip (Firefox)
+        run: pnpm zip:firefox
+
+      - name: Rename artifacts to tag
+        run: |
+          mkdir -p release
+          cp dist-zip/*.zip "release/mapa-nehnutelnosti-${GITHUB_REF_NAME}-chrome.zip"
+          cp dist-zip/*.xpi "release/mapa-nehnutelnosti-${GITHUB_REF_NAME}-firefox.xpi"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.zip
+            release/*.xpi
+          generate_release_notes: true
+          body: |
+            ## Inštalácia (Chrome / Edge / Brave)
+
+            1. Stiahni `mapa-nehnutelnosti-${{ github.ref_name }}-chrome.zip` a rozbaľ ho
+            2. Otvor `chrome://extensions`
+            3. Zapni **Developer mode** vpravo hore
+            4. Klikni **Load unpacked** a vyber rozbalený priečinok
+            5. Otvor [nehnutelnosti.sk](https://www.nehnutelnosti.sk) a začni prehliadať inzeráty
+
+            ## Inštalácia (Firefox)
+
+            Stiahni `mapa-nehnutelnosti-${{ github.ref_name }}-firefox.xpi` a presuň ho do okna Firefox-u, alebo `about:debugging` → **Load Temporary Add-on**.
