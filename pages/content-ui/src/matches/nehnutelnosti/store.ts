@@ -125,7 +125,9 @@ const hydrateFromBackground = async () => {
 
 const setActiveList = async (id: string) => {
   const pref = await overlayPrefStorage.get();
-  await overlayPrefStorage.set({ ...pref, activeListId: id });
+  // Auto-pause indexing on every list switch so the user must explicitly
+  // opt in before new searches start populating the newly active list.
+  await overlayPrefStorage.set({ ...pref, activeListId: id, indexingEnabled: false });
   state.activeListId = id;
   state.listings.clear();
   emit();

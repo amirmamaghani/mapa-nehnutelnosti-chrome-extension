@@ -97,6 +97,31 @@ export default function App() {
           )}
         </span>
         <div className="flex items-center gap-1">
+          <label
+            className="mr-1 inline-flex cursor-pointer items-center gap-1.5"
+            title={overlayPref.indexingEnabled ? t('indexingPause') : t('indexingResume')}>
+            <input
+              type="checkbox"
+              checked={overlayPref.indexingEnabled}
+              onChange={e => overlayPrefStorage.set({ ...overlayPref, indexingEnabled: e.target.checked })}
+              aria-label="indexing-toggle"
+              className="sr-only"
+            />
+            <span
+              className={`text-[10px] font-bold ${overlayPref.indexingEnabled ? 'text-green-600' : 'text-amber-600'}`}>
+              {overlayPref.indexingEnabled ? `● ${t('indexingOn')}` : `⏸ ${t('indexingOff')}`}
+            </span>
+            <span
+              className={`relative inline-block h-4 w-7 rounded-full transition-colors ${
+                overlayPref.indexingEnabled ? 'bg-green-500' : 'bg-amber-500'
+              }`}>
+              <span
+                className={`absolute top-0.5 h-3 w-3 rounded-full bg-white shadow transition-all ${
+                  overlayPref.indexingEnabled ? 'left-3.5' : 'left-0.5'
+                }`}
+              />
+            </span>
+          </label>
           <button
             onClick={() => {
               const next = LABEL_CYCLE[(LABEL_CYCLE.indexOf(overlayPref.markerLabel) + 1) % LABEL_CYCLE.length];

@@ -83,4 +83,19 @@ if (adapter) {
   const root = adapter.getObservationRoot(document) ?? document.body;
   const observer = new MutationObserver(debouncedSweep);
   observer.observe(root, { childList: true, subtree: true });
+
+  // When the user resumes indexing, listings already extracted during the
+  // paused window are sitting in knownIds and won't be re-sent. Forget what
+  // we've seen and re-extract so the active list catches up immediately.
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'local') return;
+    const c = changes['overlay-pref'];
+    if (!c) return;
+    const oldEnabled = (c.oldValue as { indexingEnabled?: boolean } | undefined)?.indexingEnabled ?? true;
+    const newEnabled = (c.newValue as { indexingEnabled?: boolean } | undefined)?.indexingEnabled ?? true;
+    if (newEnabled && !oldEnabled) {
+      knownIds.clear();
+      sweep();
+    }
+  });
 }

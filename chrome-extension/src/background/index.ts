@@ -163,6 +163,9 @@ const ensureActiveList = async (): Promise<string> => {
 const toListingList = (r: ListRecord): ListingList => ({ id: r.id, name: r.name, createdAt: r.createdAt });
 
 const handleListingsExtracted = async (listings: RawListing[], tabId: number) => {
+  const pref = await overlayPrefStorage.get();
+  if (!pref.indexingEnabled) return;
+
   const now = Date.now();
   const activeListId = await ensureActiveList();
 

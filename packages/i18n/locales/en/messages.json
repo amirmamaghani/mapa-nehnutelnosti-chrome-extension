@@ -150,5 +150,21 @@
   "importDone": {
     "description": "Message shown after import completes — $1 = imported count, $2 = skipped count",
     "message": "Imported $1, skipped $2."
+  },
+  "indexingPause": {
+    "description": "Tooltip for the header button that pauses indexing of new listings into the active list",
+    "message": "Pause indexing"
+  },
+  "indexingResume": {
+    "description": "Tooltip for the header button that resumes indexing of new listings into the active list",
+    "message": "Resume indexing"
+  },
+  "indexingOn": {
+    "description": "Short label on the header button when indexing is active",
+    "message": "REC"
+  },
+  "indexingOff": {
+    "description": "Short label on the header button when indexing is paused",
+    "message": "PAUSED"
   }
 }

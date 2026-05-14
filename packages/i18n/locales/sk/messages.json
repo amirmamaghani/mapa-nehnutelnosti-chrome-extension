@@ -150,5 +150,21 @@
   "importDone": {
     "description": "Hláška po dokončení importu — $1 = počet importovaných, $2 = počet preskočených",
     "message": "Importovaných $1, preskočených $2."
+  },
+  "indexingPause": {
+    "description": "Tooltip tlačidla v hlavičke, ktoré pozastaví indexovanie nových inzerátov do aktívneho zoznamu",
+    "message": "Pozastaviť indexovanie"
+  },
+  "indexingResume": {
+    "description": "Tooltip tlačidla v hlavičke, ktoré obnoví indexovanie nových inzerátov do aktívneho zoznamu",
+    "message": "Obnoviť indexovanie"
+  },
+  "indexingOn": {
+    "description": "Krátky štítok na tlačidle v hlavičke, keď je indexovanie zapnuté",
+    "message": "REC"
+  },
+  "indexingOff": {
+    "description": "Krátky štítok na tlačidle v hlavičke, keď je indexovanie pozastavené",
+    "message": "PAUZA"
   }
 }
