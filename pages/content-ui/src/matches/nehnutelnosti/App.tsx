@@ -53,8 +53,8 @@ export default function App() {
     );
   }
 
-  const horizontalClass = overlayPref.expandH ? 'left-4 right-4' : 'right-4 w-[480px]';
-  const verticalClass = overlayPref.expandV ? 'top-4' : 'h-[360px]';
+  const horizontalClass = overlayPref.expandH ? 'left-4 right-4' : 'right-4 w-[40vw]';
+  const verticalClass = overlayPref.expandV ? 'top-4' : 'h-[40vh]';
 
   const onListChange = async (value: string) => {
     if (value === '__new__') {
