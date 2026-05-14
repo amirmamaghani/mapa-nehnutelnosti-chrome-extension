@@ -169,6 +169,19 @@ const downloadListCsv = async (id: string) => {
   URL.revokeObjectURL(url);
 };
 
+const importListCsv = async (
+  name: string,
+  csv: string,
+): Promise<{ list: ListingList; imported: number; skipped: number } | null> => {
+  const resp = (await chrome.runtime.sendMessage({ type: 'IMPORT_LIST_CSV', name, csv })) as
+    | { type: 'IMPORT_LIST_CSV_RESPONSE'; list: ListingList; imported: number; skipped: number }
+    | undefined;
+  if (!resp) return null;
+  state.lists = [...state.lists, resp.list];
+  emit();
+  return { list: resp.list, imported: resp.imported, skipped: resp.skipped };
+};
+
 const handleRuntimeMessage = (msg: RuntimeMessage) => {
   switch (msg.type) {
     case 'LISTINGS_EXTRACTED':
@@ -212,4 +225,5 @@ export {
   renameList,
   deleteList,
   downloadListCsv,
+  importListCsv,
 };

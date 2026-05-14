@@ -55,6 +55,9 @@ export default function App() {
 
   const horizontalClass = overlayPref.expandH ? 'left-4 right-4' : 'right-4 w-[40vw]';
   const verticalClass = overlayPref.expandV ? 'top-4' : 'h-[40vh]';
+  const transparencyClass = overlayPref.transparent
+    ? 'opacity-40 transition-opacity duration-200 hover:opacity-100'
+    : '';
 
   const onListChange = async (value: string) => {
     if (value === '__new__') {
@@ -69,7 +72,7 @@ export default function App() {
 
   return (
     <div
-      className={`fixed bottom-4 z-[2147483647] flex flex-col overflow-hidden rounded-lg border border-gray-300 bg-white shadow-2xl ${horizontalClass} ${verticalClass}`}>
+      className={`fixed bottom-4 z-[2147483647] flex flex-col overflow-hidden rounded-lg border border-gray-300 bg-white shadow-2xl ${horizontalClass} ${verticalClass} ${transparencyClass}`}>
       <header
         className="relative flex items-center justify-between border-b border-gray-200 bg-gray-50 px-3 py-2 text-xs font-semibold"
         title={t('extensionName')}>

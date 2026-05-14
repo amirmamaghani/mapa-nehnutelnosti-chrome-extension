@@ -1,4 +1,4 @@
-import { deleteList, downloadListCsv, renameList, useOverlayState } from './store';
+import { deleteList, downloadListCsv, importListCsv, renameList, setActiveList, useOverlayState } from './store';
 import { t } from '@extension/i18n';
 import { useStorage } from '@extension/shared';
 import { overlayPrefStorage } from '@extension/storage';
@@ -43,6 +43,25 @@ export const Settings = ({ onClose }: Props) => {
     await deleteList(id);
   };
 
+  const onImport = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv,text/csv';
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const defaultName = file.name.replace(/\.csv$/i, '');
+      const name = window.prompt(t('importListPrompt'), defaultName);
+      if (!name?.trim()) return;
+      const csv = await file.text();
+      const resp = await importListCsv(name.trim(), csv);
+      if (!resp) return;
+      await setActiveList(resp.list.id);
+      window.alert(t('importDone', [String(resp.imported), String(resp.skipped)]));
+    };
+    input.click();
+  };
+
   const version = chrome.runtime.getManifest().version;
 
   return (
@@ -67,6 +86,20 @@ export const Settings = ({ onClose }: Props) => {
             ))}
           </select>
         </label>
+        <label htmlFor="pref-transparent" className="flex items-start gap-2 text-xs">
+          <input
+            id="pref-transparent"
+            type="checkbox"
+            checked={pref.transparent}
+            onChange={e => overlayPrefStorage.set({ ...pref, transparent: e.target.checked })}
+            aria-label={t('transparentSetting')}
+            className="mt-0.5"
+          />
+          <span className="flex flex-col">
+            <span className="text-gray-800">{t('transparentSetting')}</span>
+            <span className="text-gray-500">{t('transparentSettingHint')}</span>
+          </span>
+        </label>
         <button
           onClick={onClear}
           disabled={clearing}
@@ -75,7 +108,12 @@ export const Settings = ({ onClose }: Props) => {
         </button>
       </div>
       <div className="flex flex-col gap-1">
-        <div className="text-xs text-gray-600">{t('listsSection')}</div>
+        <div className="flex items-center justify-between">
+          <div className="text-xs text-gray-600">{t('listsSection')}</div>
+          <button onClick={onImport} className="rounded border border-gray-300 px-2 py-1 text-xs hover:bg-gray-50">
+            {t('importCsv')}
+          </button>
+        </div>
         <ul className="flex flex-col gap-1">
           {lists.map(l => (
             <li key={l.id} className="flex items-center gap-2 rounded border border-gray-200 px-2 py-1.5 text-xs">

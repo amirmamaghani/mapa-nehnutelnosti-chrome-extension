@@ -87,6 +87,14 @@
     "description": "Možnosť: zobraziť plochu v m² ako štítok markera",
     "message": "Plocha"
   },
+  "transparentSetting": {
+    "description": "Štítok checkboxu v Nastaveniach pre poloprehľadný overlay",
+    "message": "Poloprehľadné okno"
+  },
+  "transparentSettingHint": {
+    "description": "Vysvetľujúci text pod checkboxom poloprehľadnosti",
+    "message": "Stmaví okno na 40 %; pri prejdení myšou sa stane plne viditeľné."
+  },
   "geocodedOf": {
     "description": "Pätička overlayu — $1 = počet geokódovaných, $2 = počet všetkých adresovateľných",
     "message": "Geokódované $1 / $2"
@@ -130,5 +138,17 @@
   "exportCsv": {
     "description": "Tlačidlo na export zoznamu do CSV",
     "message": "Export CSV"
+  },
+  "importCsv": {
+    "description": "Tlačidlo na import zoznamu z CSV súboru",
+    "message": "Import CSV"
+  },
+  "importListPrompt": {
+    "description": "Text v dialógu prompt na zadanie názvu importovaného zoznamu",
+    "message": "Názov importovaného zoznamu:"
+  },
+  "importDone": {
+    "description": "Hláška po dokončení importu — $1 = počet importovaných, $2 = počet preskočených",
+    "message": "Importovaných $1, preskočených $2."
   }
 }

@@ -23,7 +23,7 @@ import {
   writeList,
   writeListing,
 } from '@extension/storage';
-import type { Listing, ListingList, RawListing, RuntimeMessage } from '@extension/shared';
+import type { Listing, ListingList, RawListing, RuntimeMessage, SiteId } from '@extension/shared';
 import type { ListRecord } from '@extension/storage';
 
 const NOMINATIM_BASE = 'https://nominatim.openstreetmap.org/search';
@@ -276,6 +276,109 @@ const handleExportListCsv = async (id: string) => {
   return { csv: listingsToCsv(rows), name: `${list.name.replace(/[^\w-]+/g, '_')}.csv` };
 };
 
+// Minimal RFC4180-ish CSV parser. Handles quoted cells with embedded
+// commas, newlines, and "" escapes. Sufficient for round-tripping our
+// own exports; not a full spec implementation.
+const parseCsv = (text: string): string[][] => {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let cell = '';
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') {
+          cell += '"';
+          i++;
+        } else inQuotes = false;
+      } else cell += ch;
+    } else if (ch === '"') inQuotes = true;
+    else if (ch === ',') {
+      row.push(cell);
+      cell = '';
+    } else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && text[i + 1] === '\n') i++;
+      row.push(cell);
+      if (row.length > 1 || row[0] !== '') rows.push(row);
+      row = [];
+      cell = '';
+    } else cell += ch;
+  }
+  if (cell !== '' || row.length > 0) {
+    row.push(cell);
+    rows.push(row);
+  }
+  return rows;
+};
+
+const numOrUndef = (s: string | undefined): number | undefined => {
+  if (!s) return undefined;
+  const n = Number.parseFloat(s);
+  return Number.isFinite(n) ? n : undefined;
+};
+
+const handleImportListCsv = async (
+  name: string,
+  csv: string,
+): Promise<{ list: ListingList; imported: number; skipped: number }> => {
+  const list: ListRecord = {
+    id: `list-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+    name: name.trim() || 'Importovaný zoznam',
+    createdAt: Date.now(),
+  };
+  await writeList(list);
+
+  const rows = parseCsv(csv);
+  if (rows.length < 2) return { list: toListingList(list), imported: 0, skipped: 0 };
+
+  const header = rows[0];
+  const col = (k: string) => header.indexOf(k);
+  const iId = col('id');
+  const iSite = col('site');
+  const iUrl = col('url');
+  if (iId < 0 || iSite < 0 || iUrl < 0) return { list: toListingList(list), imported: 0, skipped: rows.length - 1 };
+
+  const now = Date.now();
+  let imported = 0;
+  let skipped = 0;
+  for (const r of rows.slice(1)) {
+    const id = r[iId];
+    const site = r[iSite] as SiteId;
+    const url = r[iUrl];
+    if (!id || !site || !url) {
+      skipped++;
+      continue;
+    }
+    const colon = id.indexOf(':');
+    const siteListingId = colon >= 0 ? id.slice(colon + 1) : id;
+
+    const lat = numOrUndef(r[col('lat')]);
+    const lng = numOrUndef(r[col('lng')]);
+    const coord = lat != null && lng != null ? { lat, lng } : undefined;
+
+    const existing = await readListing<Listing>(id);
+    const listIds = existing?.listIds?.includes(list.id) ? existing.listIds : [...(existing?.listIds ?? []), list.id];
+
+    await writeListing(id, {
+      id,
+      site,
+      siteListingId,
+      url,
+      title: r[col('title')] || existing?.title || '',
+      addressRaw: r[col('addressRaw')] || existing?.addressRaw || '',
+      thumbnailUrl: r[col('thumbnailUrl')] || existing?.thumbnailUrl,
+      priceEur: numOrUndef(r[col('priceEur')]) ?? existing?.priceEur,
+      areaSqm: numOrUndef(r[col('areaSqm')]) ?? existing?.areaSqm,
+      listIds,
+      coord: coord ?? existing?.coord,
+      expiresAt: now + LISTING_TTL_MS,
+    });
+    imported++;
+  }
+  return { list: toListingList(list), imported, skipped };
+};
+
 chrome.runtime.onMessage.addListener((message: RuntimeMessage, sender, sendResponse) => {
   const tabId = sender.tab?.id;
 
@@ -310,6 +413,12 @@ chrome.runtime.onMessage.addListener((message: RuntimeMessage, sender, sendRespo
   if (message.type === 'EXPORT_LIST_CSV') {
     void handleExportListCsv(message.id).then(({ csv, name }) =>
       sendResponse({ type: 'EXPORT_LIST_CSV_RESPONSE', csv, name }),
+    );
+    return true;
+  }
+  if (message.type === 'IMPORT_LIST_CSV') {
+    void handleImportListCsv(message.name, message.csv).then(({ list, imported, skipped }) =>
+      sendResponse({ type: 'IMPORT_LIST_CSV_RESPONSE', list, imported, skipped }),
     );
     return true;
   }

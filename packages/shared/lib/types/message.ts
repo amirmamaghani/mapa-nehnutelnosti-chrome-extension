@@ -20,7 +20,9 @@ export type RuntimeMessage =
   | { type: 'RENAME_LIST'; id: string; name: string }
   | { type: 'DELETE_LIST'; id: string }
   | { type: 'EXPORT_LIST_CSV'; id: string }
-  | { type: 'EXPORT_LIST_CSV_RESPONSE'; csv: string; name: string };
+  | { type: 'EXPORT_LIST_CSV_RESPONSE'; csv: string; name: string }
+  | { type: 'IMPORT_LIST_CSV'; name: string; csv: string }
+  | { type: 'IMPORT_LIST_CSV_RESPONSE'; list: ListingList; imported: number; skipped: number };
 
 export type PageMessage = { type: 'HIGHLIGHT_LISTING'; site: string; siteListingId: string };
 

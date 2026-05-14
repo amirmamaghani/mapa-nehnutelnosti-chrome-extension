@@ -87,6 +87,14 @@
     "description": "Option: render the listing area in m² as the marker label",
     "message": "Area"
   },
+  "transparentSetting": {
+    "description": "Label of the checkbox in Settings for the semi-transparent overlay",
+    "message": "Semi-transparent window"
+  },
+  "transparentSettingHint": {
+    "description": "Helper text under the transparency checkbox",
+    "message": "Dims the window to 40%; restored to fully opaque on hover."
+  },
   "geocodedOf": {
     "description": "Footer counter — $1 = geocoded count, $2 = total addressable listings",
     "message": "Geocoded $1 / $2"
@@ -130,5 +138,17 @@
   "exportCsv": {
     "description": "Button to export a list to CSV",
     "message": "Export CSV"
+  },
+  "importCsv": {
+    "description": "Button to import a list from a CSV file",
+    "message": "Import CSV"
+  },
+  "importListPrompt": {
+    "description": "Prompt dialog text for naming the imported list",
+    "message": "Imported list name:"
+  },
+  "importDone": {
+    "description": "Message shown after import completes — $1 = imported count, $2 = skipped count",
+    "message": "Imported $1, skipped $2."
   }
 }
