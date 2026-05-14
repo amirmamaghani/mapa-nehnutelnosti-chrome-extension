@@ -63,11 +63,31 @@ Predvolená veľkosť je 40 vw × 40 vh; všetky 4 kombinácie expanzií funguj�
 
 - Slovenčina (predvolené) + angličtina
 
-## Inštalácia
+## Inštalácia do Chrome
 
-Stiahni najnovší build zo sekcie [Releases](../../releases/latest), rozbaľ a v `chrome://extensions` zapni **Developer mode** → **Load unpacked** → vyber rozbalený priečinok.
+> Funguje aj v Edge, Brave a iných Chromium-based prehliadačoch — postup je rovnaký.
 
-Pre Firefox je v každej release-i tiež `.xpi` súbor.
+1. **Stiahni `.zip`** z najnovšej [release](../../releases/latest) — súbor `mapa-nehnutelnosti-vX.Y.Z-chrome.zip`.
+2. **Rozbaľ** ZIP do priečinka, ktorý nezmažeš (rozšírenie sa načítava priamo z neho — keď priečinok zmažeš, prestane fungovať).
+3. **Otvor Chrome** a do adresného riadku napíš `chrome://extensions` → Enter.
+4. **Zapni Developer mode** prepínačom v pravom hornom rohu.
+5. Klikni **„Load unpacked"** (vľavo hore) a vyber **rozbalený priečinok** (nie ZIP súbor).
+6. Rozšírenie sa objaví v zozname so svojou ikonou. Pripni si ho v lište cez puzzle ikonu 🧩 → 📌.
+7. Otvor [nehnutelnosti.sk](https://www.nehnutelnosti.sk) a začni prehliadať inzeráty — overlay s mapou sa objaví v pravom dolnom rohu.
+
+### Aktualizácia na novšiu verziu
+
+1. Stiahni nový `.zip` z [Releases](../../releases/latest)
+2. Rozbaľ ho **na to isté miesto**, prepíš starú verziu
+3. V `chrome://extensions` klikni na ikonku ↻ (refresh) pri Mapa Nehnuteľností
+
+### Odinštalovanie
+
+V `chrome://extensions` klikni **Remove** pri Mapa Nehnuteľností. Lokálne dáta (zoznamy, obľúbené, cache) sa zmažú spolu s rozšírením.
+
+### Firefox
+
+V každej [release](../../releases/latest) je tiež `.xpi` súbor. Otvor `about:debugging` → **This Firefox** → **Load Temporary Add-on…** → vyber `.xpi`. (Trvalá inštalácia mimo AMO vyžaduje signature, takže `.xpi` sa po reštarte Firefoxu odstráni.)
 
 ## Inštalácia (vývoj)
 
