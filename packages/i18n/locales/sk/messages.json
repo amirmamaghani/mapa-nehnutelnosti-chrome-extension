@@ -218,5 +218,13 @@
   "aiSystemPromptReset": {
     "description": "Tlačidlo na vymazanie vlastného promptu a návrat na default",
     "message": "Reset na default"
+  },
+  "experimental": {
+    "description": "Krátky štítok pre experimentálne featury",
+    "message": "Experimentálne"
+  },
+  "experimentalHint": {
+    "description": "Tooltip pre experimentálny badge — vysvetľuje že feature môže meniť API alebo úplne zmiznúť",
+    "message": "Funkcia v ranej fáze. Rozhranie, schémy nástrojov a podporovaní provideri sa môžu meniť alebo úplne zmiznúť bez varovania."
   }
 }

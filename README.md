@@ -63,7 +63,9 @@ Predvolená veľkosť je 40 vw × 40 vh; všetky 4 kombinácie expanzií funguj�
 
 - Slovenčina (predvolené) + angličtina
 
-### AI vyhľadávanie (opt-in)
+### 🧪 AI vyhľadávanie (experimentálne, opt-in)
+
+> **Experimentálne:** funkcia je v ranej fáze. UI, schémy nástrojov, podporovaní provideri aj defaultný systémový prompt sa môžu meniť alebo úplne zmiznúť bez varovania. Celá implementácia je izolovaná v `pages/content-ui/src/matches/nehnutelnosti/ai/` modulu — ak ju nepotrebuješ, môžeš ju vypnúť v Nastaveniach (default = vypnuté) alebo úplne odstrániť bez vplyvu na zvyšok rozšírenia.
 
 Voliteľný režim, kde môžeš dotazovať svoj zoznam inzerátov v prirodzenom jazyku. **Vlastný API kľúč** k LLM provideru, dáta nikdy neopúšťajú tvoj prehliadač okrem dotazu na vybraný LLM endpoint.
 

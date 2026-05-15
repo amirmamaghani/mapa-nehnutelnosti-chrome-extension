@@ -1,6 +1,6 @@
 import { TOOL_SCHEMAS, runTool } from './tools.js';
+import type { LLMClient, Message } from './llm/index.js';
 import type { ToolContext } from './tools.js';
-import type { LLMClient, Message } from '@extension/shared';
 
 const DEFAULT_SYSTEM_PROMPT = `You are a real-estate search assistant embedded in a Chrome extension overlaying nehnutelnosti.sk.
 

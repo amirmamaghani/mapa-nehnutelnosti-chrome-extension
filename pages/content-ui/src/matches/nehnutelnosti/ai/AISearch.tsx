@@ -1,10 +1,11 @@
-import { runAgent } from './ai/agent';
-import { backgroundFetch } from './ai/bg-fetch';
+import { runAgent } from './agent.js';
+import { backgroundFetch } from './bg-fetch.js';
+import { createLLMClient } from './llm/index.js';
 import { t } from '@extension/i18n';
-import { useStorage, createLLMClient } from '@extension/shared';
+import { useStorage } from '@extension/shared';
 import { aiPrefStorage } from '@extension/storage';
 import { useRef, useState } from 'react';
-import type { AgentProgress } from './ai/agent';
+import type { AgentProgress } from './agent.js';
 import type { Listing } from '@extension/shared';
 
 type Props = {

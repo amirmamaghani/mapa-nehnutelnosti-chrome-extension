@@ -218,5 +218,13 @@
   "aiSystemPromptReset": {
     "description": "Button that clears the custom prompt and falls back to the default",
     "message": "Reset to default"
+  },
+  "experimental": {
+    "description": "Short label used to mark experimental features",
+    "message": "Experimental"
+  },
+  "experimentalHint": {
+    "description": "Tooltip for the experimental badge — explains that the feature may change or disappear",
+    "message": "Early-stage feature. The UI, tool schemas and supported providers may change or disappear without notice."
   }
 }

@@ -1,4 +1,5 @@
-import type { Listing, ToolSchema } from '@extension/shared';
+import type { ToolSchema } from './llm/index.js';
+import type { Listing } from '@extension/shared';
 
 type ToolName = 'filter_listings' | 'sort_and_limit' | 'aggregate' | 'describe_listings';
 

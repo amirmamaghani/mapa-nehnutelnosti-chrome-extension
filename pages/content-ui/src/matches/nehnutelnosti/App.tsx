@@ -1,4 +1,4 @@
-import { AISearch } from './AISearch';
+import { AISearch } from './ai';
 import { Filters } from './Filters';
 import { MapView } from './Map';
 import { Preview } from './Preview';

@@ -1,4 +1,5 @@
-import type { FetchLike, RuntimeMessage } from '@extension/shared';
+import type { FetchLike } from './llm/index.js';
+import type { RuntimeMessage } from '@extension/shared';
 
 type LLMFetchResponse = { type: 'LLM_FETCH_RESPONSE'; ok: boolean; status: number; body: string };
 
